@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20230426110656 extends AbstractMigration
+final class Version20230430085849 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -20,12 +20,12 @@ final class Version20230426110656 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE book ADD slug VARCHAR(255) NOT NULL');
+        $this->addSql('ALTER TABLE user ADD reset_token VARCHAR(100) DEFAULT NULL');
     }
 
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE book DROP slug');
+        $this->addSql('ALTER TABLE user DROP reset_token');
     }
 }

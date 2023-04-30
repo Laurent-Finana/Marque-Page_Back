@@ -66,6 +66,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $libraries;
 
+    /**
+     * @ORM\Column(type="string", length=100, nullable=true)
+     */
+    private $resetToken;
+
 
     public function __construct()
     {
@@ -211,6 +216,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setAlias(string $alias): self
     {
         $this->alias = $alias;
+
+        return $this;
+    }
+
+    public function getResetToken(): ?string
+    {
+        return $this->resetToken;
+    }
+
+    public function setResetToken(?string $resetToken): self
+    {
+        $this->resetToken = $resetToken;
 
         return $this;
     }
