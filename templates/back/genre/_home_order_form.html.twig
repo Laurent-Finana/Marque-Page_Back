@@ -23,5 +23,7 @@
 		{% endfor %}
 	</div>
 
+	<input type="hidden" name="token" value="{{ csrf_token('select-home-order-items') }}"/>
+
 	<button type="submit" class="btn btn-success mt-2">Enregistrer</button>
 </form>

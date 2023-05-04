@@ -61,17 +61,27 @@ class GenreController extends AbstractController
 
         if ($request->isMethod('POST')) {
 
-            $genres = $genreRepository->findAll();
-            foreach ($genres as $genre) {
-                $genre->setHomeOrder(0);
-            }
+            $submittedToken = $request->request->get('token');
 
-            for ($i = 1; $i <= 4; $i++) {
-                $genre = $genreRepository->find($request->request->get($i));
-                $genre->setHomeOrder($i);
-                $genreRepository->add($genre, true);
+            if ($this->isCsrfTokenValid('select-home-order-items', $submittedToken)) {
+                $genres = $genreRepository->findAll();
+                foreach ($genres as $genre) {
+                    $genre->setHomeOrder(0);
+                }
+
+                for ($i = 1; $i <= 4; $i++) {
+                    $genre = $genreRepository->find($request->request->get($i));
+                    $genre->setHomeOrder($i);
+                    $genreRepository->add($genre, true);
+                }
+
+                $this->addFlash('success', "Modification validée");
+                return $this->redirectToRoute('app_back_genre_index', [], Response::HTTP_SEE_OTHER);
+            } else {
+
+                $this->addFlash('danger', "Modification impossible : Token invalide");
+                return $this->redirectToRoute('app_back_genre_index', [], Response::HTTP_SEE_OTHER);
             }
-            return $this->redirectToRoute('app_back_genre_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('back/genre/home_order.html.twig', [
@@ -121,7 +131,7 @@ class GenreController extends AbstractController
     public function delete(Request $request, Genre $genre, GenreRepository $genreRepository): Response
     {
         $this->denyAccessUnlessGranted('ROLE_EDITOR');
-        
+
         if ($this->isCsrfTokenValid('delete' . $genre->getId(), $request->request->get('_token'))) {
             $genreRepository->remove($genre, true);
             $this->addFlash('danger', "Le genre <b>{$genre->getName()}</b> a bien été supprimé.");

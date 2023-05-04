@@ -124,7 +124,7 @@ class UserController extends AbstractController
     public function delete(Request $request, User $user, UserRepository $userRepository): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
-        
+
         if ($this->isCsrfTokenValid('delete' . $user->getId(), $request->request->get('_token'))) {
             $userRepository->remove($user, true);
             $this->addFlash('danger', "L'utilisateur <b>{$user->getAlias()}</b> a bien été supprimé.");

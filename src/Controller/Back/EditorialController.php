@@ -64,22 +64,30 @@ class EditorialController extends AbstractController
     /**
      * @Route("/home-active", name="app_back_editorial_home_active", methods={"GET", "POST"})
      */
-    public function homeOrder(EditorialRepository $editorialRepository, Request $request): Response
+    public function homeActive(EditorialRepository $editorialRepository, Request $request): Response
     {
         $this->denyAccessUnlessGranted('ROLE_EDITOR');
 
         if ($request->isMethod('POST')) {
 
-            $editorials = $editorialRepository->findAll();
-            foreach ($editorials as $editorial) {
-                $editorial->setActive(0);
+            $submittedToken = $request->request->get('token');
+
+            if ($this->isCsrfTokenValid('select-home-active-item', $submittedToken)) {
+                $editorials = $editorialRepository->findAll();
+                foreach ($editorials as $editorial) {
+                    $editorial->setActive(0);
+                }
+
+                $editorial = $editorialRepository->find($request->request->get('active'));
+                $editorial->setActive(1);
+                $editorialRepository->add($editorial, true);
+
+                $this->addFlash('success', "Modification validée");
+                return $this->redirectToRoute('app_back_editorial_index', [], Response::HTTP_SEE_OTHER);
+            } else {
+                $this->addFlash('danger', "Modification impossible : Token invalide");
+                return $this->redirectToRoute('app_back_editorial_index', [], Response::HTTP_SEE_OTHER);
             }
-
-            $editorial = $editorialRepository->find($request->request->get('active'));
-            $editorial->setActive(1);
-            $editorialRepository->add($editorial, true);
-
-            return $this->redirectToRoute('app_back_editorial_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('back/editorial/home_active.html.twig', [
@@ -136,7 +144,7 @@ class EditorialController extends AbstractController
     public function delete(Request $request, Editorial $editorial, EditorialRepository $editorialRepository): Response
     {
         $this->denyAccessUnlessGranted('ROLE_EDITOR');
-        
+
         if ($this->isCsrfTokenValid('delete' . $editorial->getId(), $request->request->get('_token'))) {
             $editorialRepository->remove($editorial, true);
             $this->addFlash('danger', "L'éditorial <b>{$editorial->getTitle()}</b> a bien été supprimé.");
