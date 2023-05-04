@@ -13,6 +13,8 @@ class HomeController extends AbstractController
      */
     public function index(): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_EDITOR');
+        
         return $this->render('back/home/index.html.twig', [
             'controller_name' => 'HomeController',
         ]);

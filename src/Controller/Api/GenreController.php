@@ -16,7 +16,7 @@ class GenreController extends AbstractController
      */
     public function getCollection(GenreRepository $genreRepository): Response
     {
-        $genres = $genreRepository->findAll();
+        $genres = $genreRepository->findAllOrderedByName();
 
         return $this->json(
             $genres,

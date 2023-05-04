@@ -21,6 +21,8 @@ class BookController extends AbstractController
      */
     public function index(BookRepository $bookRepository): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_EDITOR');
+
         return $this->render('back/book/index.html.twig', [
             'books' => $bookRepository->findAll(),
         ]);
@@ -31,6 +33,8 @@ class BookController extends AbstractController
      */
     public function new(Request $request, BookRepository $bookRepository, SluggerInterface $slugger): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_EDITOR');
+
         $book = new Book();
         $form = $this->createForm(BookType::class, $book);
         $form->handleRequest($request);
@@ -56,6 +60,8 @@ class BookController extends AbstractController
      */
     public function show(Book $book): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_EDITOR');
+
         return $this->render('back/book/show.html.twig', [
             'book' => $book,
         ]);
@@ -66,6 +72,8 @@ class BookController extends AbstractController
      */
     public function edit(Request $request, Book $book, BookRepository $bookRepository, SluggerInterface $slugger): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_EDITOR');
+
         $form = $this->createForm(BookType::class, $book);
         $form->handleRequest($request);
 
@@ -90,6 +98,8 @@ class BookController extends AbstractController
      */
     public function delete(Request $request, Book $book, BookRepository $bookRepository): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_EDITOR');
+        
         if ($this->isCsrfTokenValid('delete' . $book->getId(), $request->request->get('_token'))) {
             $bookRepository->remove($book, true);
             $this->addFlash('danger', "Le livre <b>{$book->getTitle()}</b> a bien été supprimé.");

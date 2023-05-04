@@ -20,6 +20,8 @@ class GenreController extends AbstractController
      */
     public function index(GenreRepository $genreRepository): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_EDITOR');
+
         return $this->render('back/genre/index.html.twig', [
             'genres' => $genreRepository->findAll(),
         ]);
@@ -30,6 +32,8 @@ class GenreController extends AbstractController
      */
     public function new(Request $request, GenreRepository $genreRepository): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_EDITOR');
+
         $genre = new Genre();
         $form = $this->createForm(GenreType::class, $genre);
         $form->handleRequest($request);
@@ -53,6 +57,8 @@ class GenreController extends AbstractController
      */
     public function homeOrder(GenreRepository $genreRepository, Request $request): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_EDITOR');
+
         if ($request->isMethod('POST')) {
 
             $genres = $genreRepository->findAll();
@@ -78,6 +84,8 @@ class GenreController extends AbstractController
      */
     public function show(Genre $genre): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_EDITOR');
+
         return $this->render('back/genre/show.html.twig', [
             'genre' => $genre,
         ]);
@@ -88,6 +96,8 @@ class GenreController extends AbstractController
      */
     public function edit(Request $request, Genre $genre, GenreRepository $genreRepository): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_EDITOR');
+
         $form = $this->createForm(GenreType::class, $genre);
         $form->handleRequest($request);
 
@@ -110,6 +120,8 @@ class GenreController extends AbstractController
      */
     public function delete(Request $request, Genre $genre, GenreRepository $genreRepository): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_EDITOR');
+        
         if ($this->isCsrfTokenValid('delete' . $genre->getId(), $request->request->get('_token'))) {
             $genreRepository->remove($genre, true);
             $this->addFlash('danger', "Le genre <b>{$genre->getName()}</b> a bien été supprimé.");

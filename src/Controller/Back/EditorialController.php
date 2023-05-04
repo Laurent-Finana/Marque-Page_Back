@@ -22,6 +22,8 @@ class EditorialController extends AbstractController
      */
     public function index(EditorialRepository $editorialRepository): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_EDITOR');
+
         return $this->render('back/editorial/index.html.twig', [
             'editorials' => $editorialRepository->findAll(),
         ]);
@@ -32,6 +34,8 @@ class EditorialController extends AbstractController
      */
     public function new(Request $request, EditorialRepository $editorialRepository, FileUploader $fileUploader): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_EDITOR');
+
         $editorial = new Editorial();
         $form = $this->createForm(EditorialType::class, $editorial);
         $form->handleRequest($request);
@@ -62,6 +66,8 @@ class EditorialController extends AbstractController
      */
     public function homeOrder(EditorialRepository $editorialRepository, Request $request): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_EDITOR');
+
         if ($request->isMethod('POST')) {
 
             $editorials = $editorialRepository->findAll();
@@ -86,6 +92,8 @@ class EditorialController extends AbstractController
      */
     public function show(Editorial $editorial): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_EDITOR');
+
         return $this->render('back/editorial/show.html.twig', [
             'editorial' => $editorial,
         ]);
@@ -96,6 +104,8 @@ class EditorialController extends AbstractController
      */
     public function edit(Request $request, Editorial $editorial, EditorialRepository $editorialRepository, FileUploader $fileUploader): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_EDITOR');
+
         $form = $this->createForm(EditorialType::class, $editorial);
         $form->handleRequest($request);
 
@@ -125,6 +135,8 @@ class EditorialController extends AbstractController
      */
     public function delete(Request $request, Editorial $editorial, EditorialRepository $editorialRepository): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_EDITOR');
+        
         if ($this->isCsrfTokenValid('delete' . $editorial->getId(), $request->request->get('_token'))) {
             $editorialRepository->remove($editorial, true);
             $this->addFlash('danger', "L'éditorial <b>{$editorial->getTitle()}</b> a bien été supprimé.");
