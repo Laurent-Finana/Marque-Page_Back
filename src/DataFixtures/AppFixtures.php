@@ -73,7 +73,7 @@ class AppFixtures extends Fixture
 
         // Create Authors
         $authorsList = [];
-        for ($a = 1; $a <= 15; $a++) {
+        for ($a = 1; $a <= 5; $a++) {
             $author = new Author();
             $author->setLastname($faker->lastName());
             $author->setFirstname($faker->firstName());
@@ -83,7 +83,7 @@ class AppFixtures extends Fixture
 
         // Create Books
         $booksList = [];
-        for ($b = 1; $b <= 25; $b++) {
+        for ($b = 1; $b <= 10; $b++) {
             $book = new Book();
             $book->setTitle($faker->sentence(mt_rand(1, 4)));
             $book->setEditor($faker->country());
@@ -122,7 +122,7 @@ class AppFixtures extends Fixture
         $manager->persist($user);
 
         // add Library to USER
-        for ($i = 0; $i <= 7; $i++) {
+        for ($i = 0; $i <= 3; $i++) {
             $randomBook = $faker->unique()->randomElement($booksList);
             $library = new Library();
             $library->setUser($user);
